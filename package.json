@@ -1,0 +1,36 @@
+{
+  "name": "webpack-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chanhui-Ho/webpack-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chanhui-Ho/webpack-demo/issues"
+  },
+  "homepage": "https://github.com/Chanhui-Ho/webpack-demo#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.7",
+    "browserslist": "^4.21.0",
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "less": "^4.1.3",
+    "less-loader": "^11.0.0",
+    "postcss": "^8.4.14",
+    "postcss-loader": "^7.0.0",
+    "postcss-preset-env": "^7.7.1",
+    "style-loader": "^3.3.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  }
+}

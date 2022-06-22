@@ -1,0 +1,6 @@
+.bgBox{
+    width: 400px;
+    height: 400px;
+    background-image: url("../img/02-avatar.jpg");
+    border: 1px solid #000;
+}

@@ -1,0 +1,4 @@
+@import './test.css';
+.box1{
+    translate: all 0.5s;
+}
