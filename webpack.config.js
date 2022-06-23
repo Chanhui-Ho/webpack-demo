@@ -1,13 +1,21 @@
 const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
+  mode: "development",
+  devtool: false,
   entry: path.resolve(__dirname, "./src/index"),
   output: {
-    filename: "build.js",
+    filename: "js/build.js",
     path: path.resolve(__dirname, "./dist"),
+    // assetModuleFilename: "img/[name].[hash:4][ext]",//全局指定资源路径
   },
   module: {
     rules: [
+      //css postcss
       {
         test: /\.css$/,
         use: [
@@ -25,29 +33,31 @@ module.exports = {
           "postcss-loader",
         ],
       },
+      //less postcss
       {
         test: /\.less$/,
         use: ["style-loader", "css-loader", "postcss-loader", "less-loader"],
       },
+      //url-loader file-loader
       {
-        test: /\.(png|svg|gif|jpe?g)$/,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              // [ext]: 扩展名
-              // [name]: 文件名
-              // [hash]: 文件内容
-              // [contentHash]:
-              // [hash:<length>]:
-              // [path]:
-              name: "img/[name].[hash:6].[ext]",
-              // outputPath: "img",
-              //超过limit大小的资源会使用调用file-loader拷贝到指定目录
-              limit: 10 * 1024,
-            },
-          },
-        ],
+        // test: /\.(png|svg|gif|jpe?g)$/,
+        // use: [
+        //   {
+        //     loader: "url-loader",
+        //     options: {
+        //       // [ext]: 扩展名
+        //       // [name]: 文件名
+        //       // [hash]: 文件内容
+        //       // [contentHash]:
+        //       // [hash:<length>]:
+        //       // [path]:
+        //       name: "img/[name].[hash:6].[ext]",
+        //       // outputPath: "img",
+        //       //超过limit大小的资源会使用调用file-loader拷贝到指定目录
+        //       limit: 10 * 1024,
+        //     },
+        //   },
+        // ],
         // use: [
         //   {
         //     loader: "file-loader",
@@ -59,6 +69,63 @@ module.exports = {
         //   }
         // ],
       },
+      //asset/resource asset/inline asset
+      {
+        // test: /\.(png|svg|gif|jpe?g)$/,
+        // type: "asset/resource",
+        // generator: {
+        //   filename: "img/[name].[hash:4][ext]",
+        // },
+
+        // test: /\.(png|svg|gif|jpe?g)$/,
+        // type: "asset/inline",
+
+        test: /\.(png|svg|gif|jpe?g)$/,
+        type: "asset",
+        generator: {
+          filename: "img/[name].[hash:4][ext]",
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024,
+          },
+        },
+      },
+      //asset/resource 处理字体
+      {
+        test: /\.(eot|ttf|woff2?)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "font/[name].[hash:3][ext]",
+        },
+      },
+      //babel-loader
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: ["babel-loader"],
+      },
     ],
   },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      //<%= htmlWebpackPlugin.options.title %>占位
+      title: "html-webpack-plugin",
+      template: "./public/index.html",
+    }),
+    new DefinePlugin({
+      PUBLIC_URL: "'./'",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "public",
+          globOptions: {
+            ignore: ["**/index.html"],
+          },
+        },
+      ],
+    }),
+  ],
 };
