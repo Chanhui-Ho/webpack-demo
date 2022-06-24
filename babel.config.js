@@ -11,7 +11,12 @@ module.exports = {
         corejs: 3,
       },
     ],
+    [
+      //兼容jsx语法
+      "@babel/preset-react",
+    ],
   ],
+  plugins: [["react-refresh/babel"]],
 };
 
 //在webpack.config.js文件中配置的写法

@@ -3,15 +3,29 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { DefinePlugin } = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
+  // watch: true, //webpack --watch
   mode: "development",
   devtool: false,
   entry: path.resolve(__dirname, "./src/index"),
   output: {
     filename: "js/build.js",
     path: path.resolve(__dirname, "./dist"),
+    publicPath: "/",
     // assetModuleFilename: "img/[name].[hash:4][ext]",//全局指定资源路径
+  },
+  // target: "web", //此配置屏蔽.browserslistrc配置
+  devServer: {
+    // hot: true,
+    hot: "only",
+    static: {
+      directory: path.resolve(__dirname, "public"),
+      publicPath: "/",
+    },
+    compress: true,
   },
   module: {
     rules: [
@@ -99,11 +113,17 @@ module.exports = {
           filename: "font/[name].[hash:3][ext]",
         },
       },
-      //babel-loader
+      //babel-loader js jsx
       {
-        test: /\.js$/,
+        // test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: ["babel-loader"],
+      },
+      //vue-loader
+      {
+        test: /\.vue$/,
+        use: ["vue-loader"],
       },
     ],
   },
@@ -127,5 +147,7 @@ module.exports = {
         },
       ],
     }),
+    new ReactRefreshWebpackPlugin(),
+    new VueLoaderPlugin(),
   ],
 };
