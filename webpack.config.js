@@ -9,8 +9,15 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin");
 module.exports = {
   // watch: true, //webpack --watch
   mode: "development",
-  devtool: false,
+  devtool: "source-map",
   entry: path.resolve(__dirname, "./src/index"),
+  resolve: {
+    //后缀名补全，默认只会补全.js和.json
+    extensions: [".js", ".json", ".ts", ".jsx", ".vue"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+  },
   output: {
     filename: "js/build.js",
     path: path.resolve(__dirname, "./dist"),
@@ -25,7 +32,19 @@ module.exports = {
       directory: path.resolve(__dirname, "public"),
       publicPath: "/",
     },
-    compress: true,
+    // compress: true, //默认开启
+    proxy: {
+      "/api": {
+        //https://api.github.com/api/user
+        target: "https://api.github.com",
+        //https://api.github.com/user
+        pathRewrite: { "^/api": "" },
+        //host字段同步为https://api.github.com，但浏览器字段不会显示同步结果
+        //不配置此项github会认为非同域阻拦请求
+        //验证origin也是防御csrf的一种手段
+        changeOrigin: true,
+      },
+    },
   },
   module: {
     rules: [
@@ -125,6 +144,13 @@ module.exports = {
         test: /\.vue$/,
         use: ["vue-loader"],
       },
+      //babel-loader ts
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: ["babel-loader"],
+        // use: ["ts-loader"],
+      },      
     ],
   },
   plugins: [
